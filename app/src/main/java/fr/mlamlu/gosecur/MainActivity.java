@@ -4,19 +4,27 @@ package fr.mlamlu.gosecur;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.google.firebase.database.DatabaseReference;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
    // TextView sampleText;
   //  Button changeButton;
+    ImageView carIdExemple;
     ImageView contentImage;
     Button takePhotoButton;
     Button FoureToutButton;
@@ -42,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
        // sampleText = findViewById(R.id.sampleTexteView);
 
       //  changeButton = findViewById(R.id.buttonFarid);
+        carIdExemple = findViewById(R.id.CardView);
         takePhotoButton = findViewById(R.id.buttonTakePhoto);
         contentImage = findViewById(R.id.imageView);
         FoureToutButton = findViewById(R.id.buttonFoureTout);
@@ -153,23 +163,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveData(View saveDataButton){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+       /* DatabaseReference myRef = database.getReference("message");
 
-        myRef.setValue("Hello, World!");
+        myRef.setValue("Hello, World BITCH!");*/
+
      /*    myRef.push().setValue(new Personne("SuceBoul","Farid"));
 
 
         sampleText.setText("Fouuuure TOUUUT");*/
 
-       // getDataFromIDCard(saveDataButton);
+        getDataFromIDCard(saveDataButton);
+
+
     }
-/*
+
 
     public void getDataFromIDCard(View v){
 
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(((BitmapDrawable) getDrawable(R.drawable.cardid)).getBitmap());
-        FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance()
-                .getCloudTextRecognizer();
+        FirebaseVisionTextRecognizer textRecognizer = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
 
         textRecognizer.processImage(image).addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
             @Override
@@ -178,6 +190,14 @@ public class MainActivity extends AppCompatActivity {
                     for( FirebaseVisionText.Line line : textBlock.getLines()){
                         Log.d("MLAMLU",line.getText());
 
+                        if (line.getText().contains("Prenom") || line.getText().contains("Prénom")  ) {
+                            String prenom = line.getText();
+
+                            //str.indexOf("is", str.indexOf("is") + 1);
+                            prenom = prenom.substring(prenom.indexOf(' '),prenom.length());
+                           prenom = prenom.replaceAll("\\s","");
+                            Log.d("MLAMLU Prenom",prenom);
+                        }
                     }
                 }
             }
@@ -189,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-    }*/
+    }
 
     String currentPhotoPath;
 
