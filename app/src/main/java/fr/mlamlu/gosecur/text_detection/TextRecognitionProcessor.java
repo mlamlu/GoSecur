@@ -13,6 +13,7 @@
 // limitations under the License.
 package fr.mlamlu.gosecur.text_detection;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -97,18 +98,48 @@ public class TextRecognitionProcessor {
 		graphicOverlay.clear();
 
 		List<FirebaseVisionText.TextBlock> blocks = results.getTextBlocks();
-
+		String prenom = "";
+		String nom = "";
 		for (int i = 0; i < blocks.size(); i++) {
 			List<FirebaseVisionText.Line> lines = blocks.get(i).getLines();
-			for (int j = 0; j < lines.size(); j++) {
-				List<FirebaseVisionText.Element> elements = lines.get(j).getElements();
-				for (int k = 0; k < elements.size(); k++) {
-					GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, elements.get(k));
-					graphicOverlay.add(textGraphic);
+			for( FirebaseVisionText.Line line : lines) {
+				//Log.d("MLAMLU LINE", line.getText());
 
+
+				if (line.getText().contains("Prenom") || line.getText().contains("Prénom")){
+					if(line.getElements().size() > 1) {
+						prenom = line.getElements().get(1).getText();
+
+						if (prenom.endsWith(",")) {
+							prenom = prenom.substring(0, prenom.length() - 1);
+
+						}
+						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(1), Color.GREEN);
+						graphicOverlay.add(textGraphic);
+
+					}
+				}else if (line.getText().contains("Nom")){
+
+					int take;
+					if(line.getElements().size() == 3 && line.getElements().get(1).getText().equalsIgnoreCase(":")){
+						take = 2;
+					}else take = 1;
+					if(line.getElements().size() > 1) {
+						nom = line.getElements().get(take).getText();
+						if (nom.startsWith(":")) {
+							nom = nom.substring(1,nom.length());
+
+						}
+
+						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(take), Color.GREEN);
+						graphicOverlay.add(textGraphic);
+					}
 				}
+
 			}
 		}
+		Log.d("MLAMLU Nom ", nom);
+		Log.d("MLAMLU Prenom ", prenom);
 	}
 
 	protected void onFailure(@NonNull Exception e) {

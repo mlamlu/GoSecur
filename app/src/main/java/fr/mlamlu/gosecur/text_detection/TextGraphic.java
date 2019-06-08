@@ -33,22 +33,22 @@ public class TextGraphic extends GraphicOverlay.Graphic {
   private static final float STROKE_WIDTH = 4.0f;
 
   private final Paint rectPaint;
-  private final Paint textPaint;
+  //private final Paint textPaint;
   private final FirebaseVisionText.Element text;
 
-  TextGraphic(GraphicOverlay overlay, FirebaseVisionText.Element text) {
+  TextGraphic(GraphicOverlay overlay, FirebaseVisionText.Element text, int color ) {
     super(overlay);
 
     this.text = text;
 
     rectPaint = new Paint();
-    rectPaint.setColor(TEXT_COLOR);
+    rectPaint.setColor(color);
     rectPaint.setStyle(Paint.Style.STROKE);
     rectPaint.setStrokeWidth(STROKE_WIDTH);
 
-    textPaint = new Paint();
-    textPaint.setColor(TEXT_COLOR);
-    textPaint.setTextSize(TEXT_SIZE);
+    //textPaint = new Paint();
+   // textPaint.setColor(TEXT_COLOR);
+    //textPaint.setTextSize(TEXT_SIZE);
     // Redraw the overlay, as this graphic has been added.
     postInvalidate();
   }
@@ -69,6 +69,7 @@ public class TextGraphic extends GraphicOverlay.Graphic {
     canvas.drawRect(rect, rectPaint);
 
     // Renders the text at the bottom of the box.
-    canvas.drawText(text.getText(), rect.left, rect.bottom, textPaint);
+    //canvas.drawText(text.getText(), rect.left, rect.bottom, textPaint);
+    canvas.drawRect(rect,rectPaint);
   }
 }
