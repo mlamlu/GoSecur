@@ -32,6 +32,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import fr.mlamlu.gosecur.MainActivity;
 import fr.mlamlu.gosecur.others.FrameMetadata;
 import fr.mlamlu.gosecur.others.GraphicOverlay;
 
@@ -43,6 +44,7 @@ import fr.mlamlu.gosecur.others.GraphicOverlay;
 public class TextRecognitionProcessor {
 
 	private static final String TAG = "TextRecProc";
+	private MainActivity context;
 
 	private final FirebaseVisionTextRecognizer detector;
 
@@ -50,8 +52,9 @@ public class TextRecognitionProcessor {
 	// the model can handle.
 	private final AtomicBoolean shouldThrottle = new AtomicBoolean(false);
 
-	public TextRecognitionProcessor() {
+	public TextRecognitionProcessor(MainActivity c) {
 		detector = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
+		context =c;
 	}
 
 
@@ -100,6 +103,7 @@ public class TextRecognitionProcessor {
 		List<FirebaseVisionText.TextBlock> blocks = results.getTextBlocks();
 		String prenom = "";
 		String nom = "";
+		String idCarte = "";
 		for (int i = 0; i < blocks.size(); i++) {
 			List<FirebaseVisionText.Line> lines = blocks.get(i).getLines();
 			for( FirebaseVisionText.Line line : lines) {
@@ -134,12 +138,37 @@ public class TextRecognitionProcessor {
 						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(take), Color.GREEN);
 						graphicOverlay.add(textGraphic);
 					}
+				}else if (line.getText().contains("CARTE NATIONALE")){
+					Log.d("MLAMLU LINE ID ", line.getText() + " size : " + line.getElements().size());
+					if(line.getElements().size() == 6 ){
+						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(line.getElements().size() - 1), Color.GREEN);
+						graphicOverlay.add(textGraphic);
+						idCarte = line.getElements().get(5).getText();
+					}
+
 				}
 
 			}
-		}
+		}/*
+		for (int i = 0; i < blocks.size(); i++) {
+			List<FirebaseVisionText.Line> lines = blocks.get(i).getLines();
+			for (int j = 0; j < lines.size(); j++) {
+				List<FirebaseVisionText.Element> elements = lines.get(j).getElements();
+				for (int k = 0; k < elements.size(); k++) {
+					GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, elements.get(k),Color.WHITE);
+					graphicOverlay.add(textGraphic);
+
+				}
+			}
+		}*/
 		Log.d("MLAMLU Nom ", nom);
 		Log.d("MLAMLU Prenom ", prenom);
+		Log.d("MLAMLU idCarte  ", idCarte);
+
+
+		if(nom != "" && prenom != "" && idCarte != ""){
+		context.succesGetInformation(nom,prenom,idCarte);
+		}
 	}
 
 	protected void onFailure(@NonNull Exception e) {

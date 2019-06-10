@@ -1,6 +1,7 @@
 package fr.mlamlu.gosecur;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,6 +22,13 @@ public class MainActivity extends AppCompatActivity {
 	private GraphicOverlay graphicOverlay;
 
 	private static String TAG = MainActivity.class.getSimpleName().toString().trim();
+
+	public static final String NAME_MESSAGE =
+			"NAME_M";
+	public static final String PRENOM_MESSAGE =
+			"PRENOM_M";
+	public static final String ID_MESSAGE =
+			"ID_M";
 
 	//endregion
 
@@ -73,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 			cameraSource.setFacing(CameraSource.CAMERA_FACING_BACK);
 		}
 
-		cameraSource.setMachineLearningFrameProcessor(new TextRecognitionProcessor());
+		cameraSource.setMachineLearningFrameProcessor(new TextRecognitionProcessor(this));
 	}
 
 	private void startCameraSource() {
@@ -92,5 +100,15 @@ public class MainActivity extends AppCompatActivity {
 				cameraSource = null;
 			}
 		}
+	}
+
+
+	public void succesGetInformation(String nom, String prenom,String idCard){
+		onDestroy();
+		Intent intent = new Intent(this, PortailActivity.class);
+		intent.putExtra(NAME_MESSAGE,nom);
+		intent.putExtra(PRENOM_MESSAGE,prenom);
+		intent.putExtra(ID_MESSAGE,idCard);
+		startActivity(intent);
 	}
 }
