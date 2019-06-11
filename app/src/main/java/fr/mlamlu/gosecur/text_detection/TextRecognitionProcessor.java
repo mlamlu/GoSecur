@@ -84,6 +84,8 @@ public class TextRecognitionProcessor {
 						.setRotation(frameMetadata.getRotation())
 						.build();
 
+
+
 		detectInVisionImage(FirebaseVisionImage.fromByteBuffer(data, metadata), frameMetadata, graphicOverlay);
 	}
 
