@@ -36,11 +36,7 @@ import fr.mlamlu.gosecur.MainActivity;
 import fr.mlamlu.gosecur.others.FrameMetadata;
 import fr.mlamlu.gosecur.others.GraphicOverlay;
 
-//import com.ajeetkumar.textdetectionusingmlkit.others.VisionProcessorBase;
 
-/**
- * Processor for the text recognition demo.
- */
 public class TextRecognitionProcessor {
 
 	private static final String TAG = "TextRecProc";
@@ -53,7 +49,7 @@ public class TextRecognitionProcessor {
 	private final AtomicBoolean shouldThrottle = new AtomicBoolean(false);
 
 	public TextRecognitionProcessor(MainActivity c) {
-		detector = FirebaseVision.getInstance().getOnDeviceTextRecognizer();
+		detector = FirebaseVision.getInstance().getCloudTextRecognizer();
 		context =c;
 	}
 
@@ -134,7 +130,6 @@ public class TextRecognitionProcessor {
 						nom = line.getElements().get(take).getText();
 						if (nom.startsWith(":")) {
 							nom = nom.substring(1,nom.length());
-
 						}
 
 						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(take), Color.GREEN);
@@ -142,10 +137,10 @@ public class TextRecognitionProcessor {
 					}
 				}else if (line.getText().contains("CARTE NATIONALE")){
 					Log.d("MLAMLU LINE ID ", line.getText() + " size : " + line.getElements().size());
-					if(line.getElements().size() == 6 ){
+					if(line.getElements().size() == 5 ){
 						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(line.getElements().size() - 1), Color.GREEN);
 						graphicOverlay.add(textGraphic);
-						idCarte = line.getElements().get(5).getText();
+						idCarte = line.getElements().get(4).getText();
 					}
 
 				}
