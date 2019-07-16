@@ -51,6 +51,7 @@ public class TextGraphic extends GraphicOverlay.Graphic {
     textPaint.setTextSize(TEXT_SIZE);
     // Redraw the overlay, as this graphic has been added.
     postInvalidate();
+
   }
 
   /** Draws the text block annotations for position, size, and raw value on the supplied canvas. */

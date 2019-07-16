@@ -1,9 +1,9 @@
 package fr.mlamlu.gosecur;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import fr.mlamlu.gosecur.camera.CameraSourcePreview;
 import fr.mlamlu.gosecur.others.GraphicOverlay;
 import fr.mlamlu.gosecur.text_detection.TextRecognitionProcessor;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
 	//region ----- Instance Variables -----
 

@@ -14,8 +14,10 @@
 package fr.mlamlu.gosecur.text_detection;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
+
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -94,7 +96,7 @@ public class TextRecognitionProcessor {
 	}
 
 
-	protected void onSuccess( @NonNull FirebaseVisionText results, @NonNull FrameMetadata frameMetadata, @NonNull GraphicOverlay graphicOverlay) {
+	protected void onSuccess(@NonNull FirebaseVisionText results, @NonNull FrameMetadata frameMetadata, @NonNull GraphicOverlay graphicOverlay) {
 
 		graphicOverlay.clear();
 
@@ -104,20 +106,23 @@ public class TextRecognitionProcessor {
 		String idCarte = "";
 		for (int i = 0; i < blocks.size(); i++) {
 			List<FirebaseVisionText.Line> lines = blocks.get(i).getLines();
+
 			for( FirebaseVisionText.Line line : lines) {
-				//Log.d("MLAMLU LINE", line.getText());
+
+				Log.d("MLAMLU LINE", line.getText());
 
 
 				if (line.getText().contains("Prenom") || line.getText().contains("Prénom")){
 					if(line.getElements().size() > 1) {
+						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(1), Color.GREEN);
+						graphicOverlay.add(textGraphic);
 						prenom = line.getElements().get(1).getText();
 
 						if (prenom.endsWith(",")) {
 							prenom = prenom.substring(0, prenom.length() - 1);
 
 						}
-						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(1), Color.GREEN);
-						graphicOverlay.add(textGraphic);
+
 
 					}
 				}else if (line.getText().contains("Nom")){
@@ -131,14 +136,17 @@ public class TextRecognitionProcessor {
 						if (nom.startsWith(":")) {
 							nom = nom.substring(1,nom.length());
 						}
+						if(nom.equalsIgnoreCase("Nom")){
+							nom = line.getElements().get(3).getText();
+						}
 
-						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(take), Color.GREEN);
+						TextGraphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(take), Color.GREEN);
 						graphicOverlay.add(textGraphic);
 					}
 				}else if (line.getText().contains("CARTE NATIONALE")){
 					Log.d("MLAMLU LINE ID ", line.getText() + " size : " + line.getElements().size());
 					if(line.getElements().size() == 5 ){
-						GraphicOverlay.Graphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(line.getElements().size() - 1), Color.GREEN);
+						TextGraphic textGraphic = new TextGraphic(graphicOverlay, line.getElements().get(4), Color.GREEN);
 						graphicOverlay.add(textGraphic);
 						idCarte = line.getElements().get(4).getText();
 					}
